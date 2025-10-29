@@ -9,13 +9,18 @@ body {
   margin-top: 20px;
 }
 
+.button-row {
+  display: flex;         /* 水平排列按钮 */
+  gap: 10px;             /* 按钮间距 */
+  margin-bottom: 10px;   /* 与视频保持距离 */
+}
+
 .video-box, .photo-box {
   display: flex;
   flex-direction: column; /* 垂直排列：按钮在上，视频在下 */
   align-items: center;    /* 居中对齐 */
   margin: 0 20px;
 }
-
 
 video, canvas {
   width: 100%;
