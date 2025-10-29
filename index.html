@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>人脸抓拍Web前端Demo网页</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h2>人脸抓拍Web前端Demo演示</h2>
+  
+  <div class="container">
+    <!-- 左侧：视频预览 -->
+    <div class="video-box">
+      <button id="start">打开摄像头</button>
+      <video id="video" autoplay></video>
+      <h3>摄像头预览显示区</h3>
+    </div>
+
+    <!-- 右侧：抓拍结果 -->
+    <div class="photo-box">
+      <button id="capture">抓拍</button>
+      <canvas id="canvas"></canvas>
+      <h3>抓拍照片显示区</h3>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
