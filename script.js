@@ -1,25 +1,48 @@
 const video = document.getElementById('video');
-const canvas = document.getElementById('canvas');
-const startBtn = document.getElementById('start');
-const captureBtn = document.getElementById('capture');
+let currentStream = null;
+let devices = []; // 摄像头列表
+let currentIndex = 0;
 
-// 打开摄像头
-startBtn.addEventListener('click', async () => {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-    video.srcObject = stream;
-  } catch (err) {
-    alert('无法访问摄像头，请检查权限或设备连接。');
-    console.error(err);
+// 获取摄像头列表
+async function getCameraDevices() {
+  const allDevices = await navigator.mediaDevices.enumerateDevices();
+  devices = allDevices.filter(d => d.kind === 'videoinput');
+}
+
+// 打开指定摄像头
+async function openCamera(index) {
+  if (currentStream) {
+    currentStream.getTracks().forEach(track => track.stop());
   }
+
+  const deviceId = devices[index]?.deviceId;
+  if (!deviceId) return alert('没有可用摄像头');
+
+  const constraints = {
+    video: { deviceId: { exact: deviceId } }
+  };
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    video.srcObject = stream;
+    currentStream = stream;
+  } catch (err) {
+    console.error('打开摄像头失败', err);
+    alert('无法访问摄像头');
+  }
+}
+
+// 初始化
+document.getElementById('start').addEventListener('click', async () => {
+  await getCameraDevices();
+  if (devices.length === 0) return alert('没有检测到摄像头');
+  currentIndex = 0;
+  openCamera(currentIndex);
 });
 
-// 抓拍当前帧
-captureBtn.addEventListener('click', () => {
-  const ctx = canvas.getContext('2d');
-  // 根据视频实际大小调整 canvas
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  ctx.drawImage(video, 0, 0);
+// 切换到下一个摄像头
+document.getElementById('nextCamera').addEventListener('click', () => {
+  if (devices.length <= 1) return; // 只有一个摄像头无需切换
+  currentIndex = (currentIndex + 1) % devices.length;
+  openCamera(currentIndex);
 });
-
