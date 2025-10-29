@@ -8,24 +8,15 @@ let currentStream = null; // 当前视频流
 let devices = [];         // 摄像头列表
 let currentIndex = 0;     // 当前使用摄像头索引
 
-// ==================== 原来的抓拍功能 ====================
+// ==================== 抓拍功能：canvas 自适应 video 原始大小 ====================
 captureBtn.addEventListener('click', () => {
+  // 将 canvas 尺寸设置为视频原始分辨率
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+
   const ctx = canvas.getContext('2d');
-
-  // 计算缩放保持比例（letterbox方式）
-  const vw = video.videoWidth;
-  const vh = video.videoHeight;
-  const cw = canvas.width;
-  const ch = canvas.height;
-
-  const scale = Math.min(cw / vw, ch / vh);
-  const w = vw * scale;
-  const h = vh * scale;
-  const x = (cw - w) / 2;
-  const y = (ch - h) / 2;
-
-  ctx.clearRect(0, 0, cw, ch);
-  ctx.drawImage(video, x, y, w, h);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 });
 
 // ==================== 获取摄像头列表 ====================
